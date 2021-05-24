@@ -9,7 +9,7 @@ export class Player extends Phaser.GameObjects.Graphics {
 	constructor(scene: Phaser.Scene, x: number, y: number) {
 		super(scene, { x, y });
 
-		this.radius = 10;
+		this.radius = 7;
 
 		this.initGraphics();
 		this.initPhysics();
@@ -26,7 +26,7 @@ export class Player extends Phaser.GameObjects.Graphics {
 	private initGraphics(): void {
 		this.fillStyle(0x0055ff);
 		this.fillCircle(0, 0, this.radius);
-		this.lineStyle(2, 0x0055ff);
+		this.lineStyle(2, 0x7755ff);
 		this.strokeCircle(0, 0, this.radius);
 	}
 
@@ -45,6 +45,36 @@ export class Player extends Phaser.GameObjects.Graphics {
 		else this.body.setVelocityX(0);
 
 		if (this.cursors.space.isDown)
-			this.bullets.add(new Bullet(this.scene, this.x, this.y));
+			this.bullets.add(
+				new Bullet(this.scene, {
+					x: this.x,
+					y: this.y,
+					dmg: 10,
+					size: 3
+				})
+			);
+
+		// if (this.cursors.down.isDown) {
+		// 	this.flash(500);
+		// }
 	}
+
+	// private flash(t: number) {
+	// 	console.log('Flashed');
+	// 	this.scene.tweens.add({
+	// 		targets: this,
+	// 		duration: t,
+	// 		radius: 7,
+	// 		onUpdate: (tween, target) => {
+	// 			let perc = tween.progress;
+	// 			console.log('Updated');
+	// 			target.clear();
+	// 			target.fillStyle(
+	// 				0xffffff -
+	// 					Phaser.Math.RoundTo((0xffffff - 0x0055ff) * perc, 0)
+	// 			);
+	// 			target.fillCircle(0, 0, target.radius);
+	// 		}
+	// 	});
+	// }
 }
