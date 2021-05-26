@@ -1,4 +1,11 @@
-import { IBulletConstructor } from '../interfaces/bullet.interface';
+export interface IBulletConstructor {
+	pos: Phaser.Math.Vector2;
+	dir: Phaser.Math.Vector2;
+	dmg: number;
+	speed?: number;
+	size?: number;
+	isCrit?: boolean;
+}
 
 export class Bullet extends Phaser.GameObjects.Graphics {
 	body: Phaser.Physics.Arcade.Body;
@@ -11,7 +18,7 @@ export class Bullet extends Phaser.GameObjects.Graphics {
 	isDying: boolean;
 
 	constructor(scene: Phaser.Scene, cfg: IBulletConstructor) {
-		super(scene, { x: cfg.x, y: cfg.y });
+		super(scene, { x: cfg.pos.x, y: cfg.pos.y });
 
 		this.tAlive = 0;
 		this.isDying = false;
@@ -21,7 +28,7 @@ export class Bullet extends Phaser.GameObjects.Graphics {
 		this.dmg = cfg.dmg;
 
 		this.initGraphics();
-		this.initPhysics(cfg.speed || 400);
+		this.initPhysics(cfg.dir, cfg.speed || 400);
 		this.scene.add.existing(this);
 	}
 
@@ -30,10 +37,11 @@ export class Bullet extends Phaser.GameObjects.Graphics {
 		this.fillRect(0, 0, this.size, this.size / 3);
 	}
 
-	private initPhysics(spd: number): void {
+	private initPhysics(dir: Phaser.Math.Vector2, spd: number): void {
+		let vDirFinal = dir.normalize().scale(spd);
 		this.scene.physics.world.enableBody(this);
 		this.body.setSize(this.size, this.size / 3);
-		this.body.setVelocity(spd, 0);
+		this.body.setVelocity(vDirFinal.x, vDirFinal.y);
 		this.body.setBounce(1, 1);
 		this.body.setCollideWorldBounds(true);
 	}

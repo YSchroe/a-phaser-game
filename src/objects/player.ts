@@ -1,4 +1,4 @@
-import { Bullet } from './Bullet';
+import { Weapon } from './Weapon';
 
 export class Player extends Phaser.GameObjects.Graphics {
 	body: Phaser.Physics.Arcade.Body;
@@ -6,12 +6,15 @@ export class Player extends Phaser.GameObjects.Graphics {
 	cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 	bullets: Phaser.GameObjects.Group;
 	color: number;
+	weapon: Weapon;
 
 	constructor(scene: Phaser.Scene, x: number, y: number) {
 		super(scene, { x, y });
 
 		this.radius = 7;
 		this.color = 0x0055ff;
+
+		this.weapon = new Weapon();
 
 		this.initGraphics();
 		this.initPhysics();
@@ -29,16 +32,12 @@ export class Player extends Phaser.GameObjects.Graphics {
 	private initGraphics(): void {
 		this.fillStyle(this.color);
 		this.fillCircle(0, 0, this.radius);
-		// this.lineStyle(4, 0x7755ff);
-		// this.strokeCircle(0, 0, this.radius);
 	}
 
 	private initPhysics(): void {
 		this.scene.physics.world.enableBody(this);
 		this.body.setCircle(this.radius);
-		// this.body.setSize(2 * this.radius, 2 * this.radius);
 		this.body.setOffset(-this.radius, -this.radius);
-		// this.body.setVelocity(5, 5);
 		this.body.setBounce(1, 1);
 		this.body.setCollideWorldBounds(true);
 	}
@@ -49,13 +48,11 @@ export class Player extends Phaser.GameObjects.Graphics {
 		else this.body.setVelocityX(0);
 
 		if (this.cursors.space.isDown)
-			this.bullets.add(
-				new Bullet(this.scene, {
-					x: this.x,
-					y: this.y,
-					dmg: 10,
-					size: 3
-				})
+			this.weapon.shoot(
+				this.scene,
+				this.bullets,
+				new Phaser.Math.Vector2(this.x, this.y),
+				this.scene.input.activePointer.position
 			);
 	}
 
@@ -63,7 +60,7 @@ export class Player extends Phaser.GameObjects.Graphics {
 		this.scene.tweens.add({
 			targets: this,
 			duration: t,
-			color: { from: this.color, to: this.color }, // not used, but tween need a parameter to tween
+			color: { from: this.color, to: this.color }, // not used, but tween needs a parameter to tween
 			onUpdate: (tween, target) => {
 				let perc = tween.progress;
 				target.clear();
