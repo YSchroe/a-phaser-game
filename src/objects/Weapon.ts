@@ -2,11 +2,11 @@ import { Bullet } from './Bullet';
 
 export class Weapon {
 	rof: number;
-	canShoot: boolean;
+	onCooldown: boolean;
 
 	constructor() {
 		this.rof = 5;
-		this.canShoot = true;
+		this.onCooldown = false;
 	}
 
 	public shoot(
@@ -15,7 +15,7 @@ export class Weapon {
 		pos: Phaser.Math.Vector2,
 		dir: Phaser.Math.Vector2
 	) {
-		if (this.canShoot) {
+		if (!this.onCooldown) {
 			bulletGroup.add(
 				new Bullet(scene, {
 					pos,
@@ -24,10 +24,10 @@ export class Weapon {
 					size: 3
 				})
 			);
-			this.canShoot = false;
+			this.onCooldown = true;
 			scene.time.delayedCall(
 				(1000 * 1) / this.rof,
-				() => (this.canShoot = true)
+				() => (this.onCooldown = false)
 			);
 		}
 	}

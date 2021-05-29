@@ -3,7 +3,7 @@ import { Weapon } from './Weapon';
 export class Player extends Phaser.GameObjects.Graphics {
 	body: Phaser.Physics.Arcade.Body;
 	radius: number;
-	cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+	cursors: any;
 	bullets: Phaser.GameObjects.Group;
 	color: number;
 	weapon: Weapon;
@@ -25,7 +25,13 @@ export class Player extends Phaser.GameObjects.Graphics {
 	}
 
 	private initInput(): void {
-		this.cursors = this.scene.input.keyboard.createCursorKeys();
+		const keyCodes = Phaser.Input.Keyboard.KeyCodes;
+		this.cursors = this.scene.input.keyboard.addKeys({
+			up: keyCodes.W,
+			down: keyCodes.S,
+			left: keyCodes.A,
+			right: keyCodes.D
+		});
 		this.cursors.down.onDown = () => this.flash(250);
 	}
 
@@ -42,18 +48,19 @@ export class Player extends Phaser.GameObjects.Graphics {
 		this.body.setCollideWorldBounds(true);
 	}
 
-	update(): void {
+	update(_dt: number): void {
 		if (this.cursors.left.isDown) this.body.setVelocityX(-100);
 		else if (this.cursors.right.isDown) this.body.setVelocityX(100);
 		else this.body.setVelocityX(0);
 
-		if (this.cursors.space.isDown)
+		if (this.scene.input.mousePointer.leftButtonDown()) {
 			this.weapon.shoot(
 				this.scene,
 				this.bullets,
 				new Phaser.Math.Vector2(this.x, this.y),
-				this.scene.input.activePointer.position
+				this.scene.input.mousePointer.position.clone()
 			);
+		}
 	}
 
 	private flash(t: number) {
