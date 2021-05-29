@@ -21,7 +21,7 @@ export class Weapon {
 					pos,
 					dir: dir.subtract(pos),
 					dmg: 10,
-					size: 3
+					size: 6
 				})
 			);
 			this.onCooldown = true;

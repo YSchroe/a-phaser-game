@@ -53,14 +53,15 @@ export class Bullet extends Phaser.GameObjects.Graphics {
 			this.scene.tweens.add({
 				targets: this,
 				alpha: 0,
-				duration: 100,
+				duration: 250,
 				onComplete: (_tween, targets) => targets[0].destroy()
 			});
 
 			this.scene.tweens.add({
 				targets: this.body.velocity,
 				x: 0,
-				duration: 100
+				y: 0,
+				duration: 250
 			});
 		}
 	}

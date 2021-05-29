@@ -2,8 +2,8 @@ import { MainScene } from './scenes/main-scene';
 
 const SCREEN_W = 1300;
 
-const RENDER_W = 480;
-const RENDER_H = 270;
+const RENDER_W = 620;
+const RENDER_H = (RENDER_W * 9) / 16;
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
 	title: 'A GAME',
@@ -16,11 +16,14 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
 	physics: {
 		default: 'arcade',
 		arcade: {
-			gravity: { y: 50 }
+			// gravity: { y: 50 }
 			// debug: true
 		}
 	},
-	zoom: SCREEN_W / RENDER_W,
+	scale: {
+		zoom: SCREEN_W / RENDER_W
+		// mode: Phaser.Scale.
+	},
 	render: {
 		pixelArt: true
 	},

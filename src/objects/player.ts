@@ -11,7 +11,7 @@ export class Player extends Phaser.GameObjects.Graphics {
 	constructor(scene: Phaser.Scene, x: number, y: number) {
 		super(scene, { x, y });
 
-		this.radius = 7;
+		this.radius = 8;
 		this.color = 0x0055ff;
 
 		this.weapon = new Weapon();
@@ -32,7 +32,7 @@ export class Player extends Phaser.GameObjects.Graphics {
 			left: keyCodes.A,
 			right: keyCodes.D
 		});
-		this.cursors.down.onDown = () => this.flash(250);
+		// this.cursors.down.onDown = () => this.flash(250);
 	}
 
 	private initGraphics(): void {
@@ -49,9 +49,15 @@ export class Player extends Phaser.GameObjects.Graphics {
 	}
 
 	update(_dt: number): void {
+		// X direction
 		if (this.cursors.left.isDown) this.body.setVelocityX(-100);
 		else if (this.cursors.right.isDown) this.body.setVelocityX(100);
 		else this.body.setVelocityX(0);
+
+		// Y direction
+		if (this.cursors.up.isDown) this.body.setVelocityY(-100);
+		else if (this.cursors.down.isDown) this.body.setVelocityY(100);
+		else this.body.setVelocityY(0);
 
 		if (this.scene.input.mousePointer.leftButtonDown()) {
 			this.weapon.shoot(
